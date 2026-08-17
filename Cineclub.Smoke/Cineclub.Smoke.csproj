@@ -9,6 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cineclub.App\Cineclub.App.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.11" />
   </ItemGroup>
 </Project>
