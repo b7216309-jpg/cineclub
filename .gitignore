@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+publish/
+.vs/
+.idea/
+TestResults/
+artifacts/
+*.log
+*.user
+*.suo
+Cineclub.App/Tools/cloudflared.exe

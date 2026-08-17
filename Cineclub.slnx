@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Cineclub.App/Cineclub.App.csproj" />
+  <Project Path="Cineclub.Smoke/Cineclub.Smoke.csproj" />
+</Solution>

@@ -1,0 +1,419 @@
+<Window x:Class="Cineclub.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        mc:Ignorable="d"
+        Title="Cineclub"
+        Width="1360"
+        Height="850"
+        MinWidth="1180"
+        MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Closing="Window_Closing"
+        KeyDown="Window_KeyDown"
+        AutomationProperties.Name="Cineclub 2.0">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            ResizeBorderThickness="6"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Border BorderBrush="#262731" BorderThickness="1" Background="{StaticResource CanvasBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="TitleBarRow" Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Custom title bar -->
+            <Grid x:Name="TitleBar" Grid.Row="0" Background="#0D0E13" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="46" />
+                    <ColumnDefinition Width="46" />
+                    <ColumnDefinition Width="46" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <Border Width="20" Height="20" CornerRadius="6" Background="{StaticResource AccentBrush}">
+                        <TextBlock Text="▶" Foreground="White" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="CINECLUB" Margin="9,0,0,0" VerticalAlignment="Center" FontSize="11" FontWeight="Bold" Foreground="#EDEAF0" />
+                    <TextBlock Text="2.0" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="10" Foreground="{StaticResource MutedTextBrush}" />
+                </StackPanel>
+                <Button Grid.Column="1" Content="—" AutomationProperties.Name="Réduire la fenêtre" Style="{StaticResource IconButtonStyle}" Width="46" Height="40" BorderThickness="0" Background="Transparent" Click="MinimizeButton_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True" />
+                <Button Grid.Column="2" Content="□" AutomationProperties.Name="Agrandir ou restaurer la fenêtre" Style="{StaticResource IconButtonStyle}" Width="46" Height="40" BorderThickness="0" Background="Transparent" Click="MaximizeButton_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True" />
+                <Button Grid.Column="3" Content="×" AutomationProperties.Name="Fermer Cineclub" Style="{StaticResource IconButtonStyle}" Width="46" Height="40" BorderThickness="0" Background="Transparent" Foreground="#FF8CAB" Click="CloseButton_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True" />
+            </Grid>
+
+            <!-- Welcome / mode picker -->
+            <Grid x:Name="WelcomeView" Grid.Row="1">
+                <Grid.Background>
+                    <RadialGradientBrush Center="0.22,0.34" GradientOrigin="0.22,0.34" RadiusX="0.78" RadiusY="0.9">
+                        <GradientStop Color="#26101A" Offset="0" />
+                        <GradientStop Color="#0E0B11" Offset="0.38" />
+                        <GradientStop Color="#08090D" Offset="1" />
+                    </RadialGradientBrush>
+                </Grid.Background>
+
+                <Grid Margin="68,38,68,50" MaxWidth="1160">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*" />
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="0.9*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" MaxWidth="570" HorizontalAlignment="Left">
+                        <Border Width="72" Height="72" CornerRadius="22" Background="{StaticResource AccentBrush}" HorizontalAlignment="Left">
+                            <Grid>
+                                <Ellipse Width="38" Height="38" Stroke="White" StrokeThickness="2" Opacity="0.92" />
+                                <Ellipse Width="7" Height="7" Fill="White" Margin="0,0,0,20" />
+                                <Ellipse Width="7" Height="7" Fill="White" Margin="20,0,0,0" />
+                                <Ellipse Width="7" Height="7" Fill="White" Margin="0,20,0,0" />
+                                <Ellipse Width="7" Height="7" Fill="White" Margin="0,0,20,0" />
+                            </Grid>
+                        </Border>
+                        <TextBlock Margin="0,28,0,0" Text="Le cinéma,&#x0a;vraiment ensemble." FontSize="46" FontWeight="Bold" LineHeight="52" Foreground="#FBF8FA" />
+                        <TextBlock Margin="0,20,35,0" Text="Le film original en 1080p, décodé directement par VLC sur chaque PC. Pas d’attente, pas de conversion, tout le monde au même instant." FontSize="16" LineHeight="25" TextWrapping="Wrap" Foreground="#B3AFB8" />
+                        <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                            <Border CornerRadius="8" Background="#20171D" BorderBrush="#3C2530" BorderThickness="1" Padding="12,7">
+                                <TextBlock Text="◆  SOURCE ORIGINALE" FontSize="10" FontWeight="SemiBold" Foreground="#FF9ABC" />
+                            </Border>
+                            <Border CornerRadius="8" Background="#141B18" BorderBrush="#243B31" BorderThickness="1" Padding="12,7" Margin="9,0,0,0">
+                                <TextBlock Text="●  SYNCHRO TEMPS RÉEL" FontSize="10" FontWeight="SemiBold" Foreground="#6BE3A5" />
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="34" VerticalAlignment="Center" MaxWidth="470">
+                        <StackPanel>
+                            <TextBlock Text="Prêt pour la séance ?" FontSize="25" FontWeight="SemiBold" />
+                            <TextBlock Text="Un prénom suffit. Aucun compte à créer." Margin="0,8,0,27" Foreground="{StaticResource MutedTextBrush}" FontSize="13" />
+
+                            <TextBlock Text="TON PRÉNOM" FontSize="10" FontWeight="Bold" Foreground="#B8B4BD" Margin="2,0,0,8" />
+                            <TextBox x:Name="WelcomeNameBox" AutomationProperties.Name="Ton prénom" Style="{StaticResource FieldStyle}" MaxLength="24" Text="" KeyDown="WelcomeNameBox_KeyDown" />
+
+                            <Button x:Name="HostButton" Content="HÉBERGER UNE SÉANCE" Style="{StaticResource PrimaryButtonStyle}" Margin="0,18,0,0" Click="HostButton_Click" />
+                            <Button x:Name="ShowJoinButton" Content="REJOINDRE AVEC UN LIEN" Style="{StaticResource SecondaryButtonStyle}" Margin="0,10,0,0" Click="ShowJoinButton_Click" />
+
+                            <StackPanel x:Name="JoinLinkPanel" Visibility="Collapsed" Margin="0,21,0,0">
+                                <Border Height="1" Background="{StaticResource BorderBrush}" Margin="0,0,0,20" />
+                                <TextBlock Text="LIEN D’INVITATION" FontSize="10" FontWeight="Bold" Foreground="#B8B4BD" Margin="2,0,0,8" />
+                                <TextBox x:Name="JoinLinkBox" AutomationProperties.Name="Lien d’invitation" Style="{StaticResource FieldStyle}" MaxLength="800" KeyDown="JoinLinkBox_KeyDown" />
+                                <Button x:Name="JoinButton" Content="ENTRER DANS LA SALLE" Style="{StaticResource PrimaryButtonStyle}" Margin="0,10,0,0" Click="JoinButton_Click" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="WelcomeBusyPanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">
+                                <ProgressBar Width="76" Height="3" IsIndeterminate="True" Foreground="{StaticResource AccentBrush}" Background="#2A2B34" />
+                                <TextBlock x:Name="WelcomeBusyText" Text="Connexion…" Margin="12,0,0,0" Foreground="{StaticResource MutedTextBrush}" FontSize="12" />
+                            </StackPanel>
+                            <TextBlock x:Name="WelcomeErrorText" Margin="0,16,0,0" TextWrapping="Wrap" Foreground="#FF86A8" FontSize="12" Visibility="Collapsed" />
+
+                            <TextBlock Margin="0,24,0,0" Text="Le film reste sur le PC de l’hôte et est envoyé directement aux invités pendant la séance." TextWrapping="Wrap" TextAlignment="Center" FontSize="11" LineHeight="17" Foreground="#706D77" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Main room -->
+            <Grid x:Name="RoomView" Grid.Row="1" Visibility="Collapsed" Background="{StaticResource CanvasBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="RoomHeaderRow" Height="62" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="RoomHeader" Grid.Row="0" Margin="18,0" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock x:Name="MovieTitleText" Text="En attente d’un film" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" MaxWidth="420" TextTrimming="CharacterEllipsis" />
+                        <Border x:Name="RoleBadge" Margin="12,0,0,0" CornerRadius="7" Padding="9,4" Background="#291824" BorderBrush="#4D2639" BorderThickness="1">
+                            <TextBlock x:Name="RoleBadgeText" Text="HÔTE" FontSize="9" FontWeight="Bold" Foreground="#FF8DB4" />
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Margin="15,0,0,0" VerticalAlignment="Center">
+                            <Ellipse x:Name="StatusDot" Width="7" Height="7" Fill="{StaticResource WarningBrush}" />
+                            <TextBlock x:Name="RoomStatusText" Text="Connexion…" Margin="7,0,0,0" Foreground="{StaticResource MutedTextBrush}" FontSize="11" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border x:Name="InvitePanel" Grid.Column="1" Style="{StaticResource CardStyle}" CornerRadius="9" Height="40" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="InviteTextBox" AutomationProperties.Name="Lien d’invitation de la salle" Text="Création du lien…" IsReadOnly="True" BorderThickness="0" Background="Transparent" Foreground="#B9B5BE" VerticalContentAlignment="Center" Padding="11,0" FontSize="11" />
+                            <Button x:Name="CopyInviteButton" Grid.Column="1" Content="COPIER" AutomationProperties.Name="Copier le lien d’invitation" IsEnabled="False" Style="{StaticResource PillButtonStyle}" Height="30" Margin="2" Click="CopyInviteButton_Click" />
+                        </Grid>
+                    </Border>
+                    <Button x:Name="LeaveButton" Grid.Column="2" Content="QUITTER" AutomationProperties.Name="Quitter la salle" Style="{StaticResource PillButtonStyle}" VerticalAlignment="Center" Foreground="#FF9AB6" Click="LeaveButton_Click" />
+                </Grid>
+
+                <Grid x:Name="RoomContentGrid" Grid.Row="1" Margin="16,0,16,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition x:Name="SidebarColumn" Width="330" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid x:Name="PlayerColumn" Margin="0,0,12,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="VideoFrame" Grid.Row="0" Background="Black" CornerRadius="16" BorderBrush="#24252D" BorderThickness="1" ClipToBounds="True">
+                            <vlc:VideoView x:Name="PlayerVideoView" AutomationProperties.Name="Lecteur vidéo Cineclub" Background="Black" MouseDoubleClick="PlayerVideoView_MouseDoubleClick">
+                                <Grid Background="Transparent">
+                                    <Grid x:Name="PlayerEmptyOverlay" Background="#0B0C10">
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="390">
+                                            <Border Width="70" Height="70" CornerRadius="22" Background="#181921" BorderBrush="#2D2E39" BorderThickness="1">
+                                                <TextBlock Text="▶" FontSize="23" Foreground="#696773" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock x:Name="EmptyPlayerTitle" Text="La salle est prête" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,20,0,0" />
+                                            <TextBlock x:Name="EmptyPlayerSubtitle" Text="Choisis le film original pour démarrer la diffusion." TextAlignment="Center" TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" FontSize="13" Margin="0,8,0,0" />
+                                            <Button x:Name="OpenMovieButton" Content="OUVRIR UN FILM" Style="{StaticResource PrimaryButtonStyle}" Width="190" Margin="0,21,0,0" Click="OpenMovieButton_Click" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Border x:Name="BufferingPanel" AutomationProperties.LiveSetting="Polite" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#DD111219" CornerRadius="12" Padding="21,14" Visibility="Collapsed">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ProgressBar Width="54" Height="3" IsIndeterminate="True" Foreground="{StaticResource AccentBrush}" Background="#3A3B45" VerticalAlignment="Center" />
+                                            <TextBlock x:Name="BufferingText" Text="Mise en mémoire…" Margin="13,0,0,0" VerticalAlignment="Center" FontSize="12" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12">
+                                        <Border Background="#CB111219" CornerRadius="7" Padding="9,5">
+                                            <TextBlock Text="1080p · DIRECT" FontSize="9" FontWeight="Bold" Foreground="#D8D4DB" />
+                                        </Border>
+                                        <Border Background="#CB132019" CornerRadius="7" Padding="9,5" Margin="7,0,0,0">
+                                            <TextBlock x:Name="SyncBadgeText" Text="SYNCHRO" FontSize="9" FontWeight="Bold" Foreground="#65DB9D" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <Border x:Name="ReactionOverlay" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,18" Background="#D9181921" CornerRadius="22" Padding="15,8" Visibility="Collapsed">
+                                        <TextBlock x:Name="ReactionOverlayText" Text="🔥" FontSize="24" />
+                                    </Border>
+                                </Grid>
+                            </vlc:VideoView>
+                        </Border>
+
+                        <Border x:Name="ControlsPanel" Grid.Row="1" Style="{StaticResource CardStyle}" CornerRadius="14" Margin="0,10,0,0" Padding="15,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="PositionText" Text="00:00" FontSize="11" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" />
+                                    <Slider x:Name="SeekSlider" Grid.Column="1" AutomationProperties.Name="Position dans le film" Style="{StaticResource CinemaSliderStyle}" Minimum="0" Maximum="1" Value="0" Margin="8,0" IsEnabled="False" PreviewMouseLeftButtonDown="SeekSlider_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="SeekSlider_PreviewMouseLeftButtonUp" LostMouseCapture="SeekSlider_LostMouseCapture" PreviewKeyDown="SeekSlider_PreviewKeyDown" />
+                                    <TextBlock x:Name="DurationText" Grid.Column="2" Text="--:--" FontSize="11" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+
+                                <Grid Grid.Row="1" Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="115" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="BackTenButton" Content="−10" AutomationProperties.Name="Reculer de 10 secondes" IsEnabled="False" Style="{StaticResource IconButtonStyle}" ToolTip="Reculer de 10 secondes" Click="BackTenButton_Click" />
+                                    <Button x:Name="PlayPauseButton" Grid.Column="1" Content="▶" AutomationProperties.Name="Lecture ou pause" IsEnabled="False" Style="{StaticResource PrimaryButtonStyle}" Width="46" Height="40" Padding="0" Margin="7,0" ToolTip="Lecture / pause" Click="PlayPauseButton_Click" />
+                                    <Button x:Name="ForwardTenButton" Grid.Column="2" Content="+10" AutomationProperties.Name="Avancer de 10 secondes" IsEnabled="False" Style="{StaticResource IconButtonStyle}" ToolTip="Avancer de 10 secondes" Click="ForwardTenButton_Click" />
+                                    <TextBlock Grid.Column="4" Text="♪" FontSize="16" VerticalAlignment="Center" Foreground="#C5C1C9" />
+                                    <Slider x:Name="VolumeSlider" Grid.Column="5" AutomationProperties.Name="Volume" Style="{StaticResource CinemaSliderStyle}" Minimum="0" Maximum="100" Value="82" Margin="8,0,7,0" ValueChanged="VolumeSlider_ValueChanged" />
+                                    <StackPanel Grid.Column="7" Orientation="Horizontal">
+                                        <ComboBox x:Name="AudioTracksCombo" AutomationProperties.Name="Piste audio" IsEnabled="False" Style="{StaticResource DarkComboStyle}" Width="135" ToolTip="Piste audio" SelectionChanged="AudioTracksCombo_SelectionChanged" />
+                                        <ComboBox x:Name="SubtitleTracksCombo" AutomationProperties.Name="Piste de sous-titres" IsEnabled="False" Style="{StaticResource DarkComboStyle}" Width="135" Margin="7,0,0,0" ToolTip="Sous-titres" SelectionChanged="SubtitleTracksCombo_SelectionChanged" />
+                                        <Button x:Name="SubtitleFileButton" Content="SRT +" AutomationProperties.Name="Ajouter un fichier de sous-titres local" IsEnabled="False" Style="{StaticResource IconButtonStyle}" Width="48" Height="36" Margin="7,0,0,0" FontSize="9" ToolTip="Ajouter des sous-titres locaux" Click="SubtitleFileButton_Click" />
+                                    </StackPanel>
+                                    <Button x:Name="ReadyButton" Grid.Column="8" Content="JE SUIS PRÊT" AutomationProperties.Name="Indiquer que je suis prêt" IsEnabled="False" Style="{StaticResource PillButtonStyle}" Height="36" Margin="9,0,0,0" Click="ReadyButton_Click" />
+                                    <Button x:Name="FullscreenButton" Grid.Column="9" Content="⛶" AutomationProperties.Name="Activer le plein écran" Style="{StaticResource IconButtonStyle}" Width="38" Height="36" Margin="7,0,0,0" ToolTip="Plein écran" Click="FullscreenButton_Click" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border x:Name="SeatsPanel" Grid.Row="2" Style="{StaticResource CardStyle}" CornerRadius="14" Margin="0,10,0,0" Padding="16,11">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <TextBlock Text="LES FAUTEUILS" FontSize="10" FontWeight="Bold" Foreground="#A7A3AD" VerticalAlignment="Center" />
+                                    <TextBlock Text="Choisis ta place" HorizontalAlignment="Right" FontSize="10" Foreground="#65626B" VerticalAlignment="Center" />
+                                </Grid>
+                                <ItemsControl x:Name="SeatsItems" Grid.Row="1" Margin="0,9,0,0" HorizontalAlignment="Stretch">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Rows="1" Columns="6" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button AutomationProperties.Name="{Binding Label}" Style="{StaticResource SecondaryButtonStyle}" Height="51" Margin="4,0" Padding="8,0" Tag="{Binding Number}" Click="SeatButton_Click">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="34" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border x:Name="SeatAvatar" Width="30" Height="30" CornerRadius="10" Background="#292A35">
+                                                        <TextBlock Text="{Binding Initials}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#DFDBE2" />
+                                                    </Border>
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding Label}" FontSize="10" Foreground="#77747D" />
+                                                        <TextBlock Text="{Binding OccupantName}" FontSize="11" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Button>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsMine}" Value="True">
+                                                    <Setter TargetName="SeatAvatar" Property="Background" Value="{StaticResource AccentBrush}" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- People + chat -->
+                    <Border x:Name="SidebarPanel" Grid.Column="1" Style="{StaticResource CardStyle}" CornerRadius="16" Padding="16">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="1" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid>
+                                <TextBlock Text="DANS LA SALLE" FontSize="10" FontWeight="Bold" Foreground="#A7A3AD" VerticalAlignment="Center" />
+                                <Border HorizontalAlignment="Right" Background="#24252E" CornerRadius="8" Padding="8,3">
+                                    <TextBlock x:Name="ParticipantCountText" Text="0 / 6" FontSize="10" Foreground="#B9B5BE" />
+                                </Border>
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="1" Margin="0,11,0,12" MaxHeight="176" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl x:Name="ParticipantsItems">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                        <Grid Margin="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="38" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="32" Height="32" CornerRadius="10" Background="#282933">
+                                                <TextBlock Text="{Binding Initials}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding DisplayName}" FontSize="12" FontWeight="SemiBold" />
+                                                    <TextBlock Text="  ·  " Foreground="#55535B" />
+                                                    <TextBlock Text="{Binding RoleLabel}" FontSize="10" Foreground="#77747E" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding SeatLabel}" FontSize="9" Foreground="#68656E" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Ellipse x:Name="ReadyDot" Width="7" Height="7" Fill="{StaticResource WarningBrush}" />
+                                                <TextBlock Text="{Binding ReadyLabel}" Margin="5,0,0,0" FontSize="9" Foreground="#8B8790" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsReady}" Value="True">
+                                                <Setter TargetName="ReadyDot" Property="Fill" Value="{StaticResource SuccessBrush}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <Border Grid.Row="2" Background="{StaticResource BorderBrush}" />
+
+                            <Grid Grid.Row="3" Margin="0,13,0,9">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="CHAT" FontSize="10" FontWeight="Bold" Foreground="#A7A3AD" />
+                                <ScrollViewer x:Name="ChatScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0">
+                                    <ItemsControl x:Name="ChatItems">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#15161D" CornerRadius="9" Padding="10,8" Margin="0,3">
+                                                    <StackPanel>
+                                                        <Grid>
+                                                            <TextBlock Text="{Binding Author}" FontSize="10" FontWeight="SemiBold" Foreground="#FF8EB5" />
+                                                            <TextBlock Text="{Binding TimeLabel}" HorizontalAlignment="Right" FontSize="9" Foreground="#5E5B64" />
+                                                        </Grid>
+                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="11" Foreground="#D6D2D9" Margin="0,4,0,0" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+
+                            <Grid Grid.Row="4" Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="42" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="ChatBox" AutomationProperties.Name="Message du chat" Style="{StaticResource FieldStyle}" Height="42" Padding="12,0" MaxLength="500" KeyDown="ChatBox_KeyDown" />
+                                <Button Grid.Column="1" Content="➤" AutomationProperties.Name="Envoyer le message" Style="{StaticResource PrimaryButtonStyle}" Width="38" Height="38" Padding="0" Margin="4,2,0,2" Click="SendChatButton_Click" />
+                            </Grid>
+
+                            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="😂" AutomationProperties.Name="Réagir en riant" Style="{StaticResource IconButtonStyle}" Width="42" Height="36" Margin="2" Tag="😂" Click="ReactionButton_Click" />
+                                <Button Content="😱" AutomationProperties.Name="Réagir avec surprise" Style="{StaticResource IconButtonStyle}" Width="42" Height="36" Margin="2" Tag="😱" Click="ReactionButton_Click" />
+                                <Button Content="🔥" AutomationProperties.Name="Réagir avec une flamme" Style="{StaticResource IconButtonStyle}" Width="42" Height="36" Margin="2" Tag="🔥" Click="ReactionButton_Click" />
+                                <Button Content="❤️" AutomationProperties.Name="Réagir avec un cœur" Style="{StaticResource IconButtonStyle}" Width="42" Height="36" Margin="2" Tag="❤️" Click="ReactionButton_Click" />
+                                <Button Content="👏" AutomationProperties.Name="Applaudir" Style="{StaticResource IconButtonStyle}" Width="42" Height="36" Margin="2" Tag="👏" Click="ReactionButton_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Non-blocking feedback -->
+            <Border x:Name="ToastPanel" Grid.Row="1" AutomationProperties.LiveSetting="Polite" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24" Background="#F22A2B34" CornerRadius="11" BorderBrush="#42434E" BorderThickness="1" Padding="16,10" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="ToastDot" Width="7" Height="7" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ToastText" Text="Lien copié" Margin="9,0,0,0" FontSize="12" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

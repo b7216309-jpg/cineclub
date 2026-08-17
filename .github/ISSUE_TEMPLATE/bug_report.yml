@@ -1,0 +1,87 @@
+name: Rapport de bug
+description: Signaler un problème reproductible dans Cineclub
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de retirer tout lien d'invitation, jeton, chemin personnel et contenu vidéo avant de publier ce rapport.
+
+  - type: input
+    id: cineclub-version
+    attributes:
+      label: Version de Cineclub
+      placeholder: "2.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: windows-version
+    attributes:
+      label: Version de Windows
+      placeholder: "Windows 11 24H2"
+    validations:
+      required: true
+
+  - type: input
+    id: gpu
+    attributes:
+      label: Carte graphique et pilote
+      placeholder: "Modèle du GPU et version du pilote"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Rôle concerné
+      options:
+        - Hôte
+        - Invité
+        - Les deux
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes de reproduction
+      description: Décris les actions minimales qui reproduisent le problème.
+      placeholder: |
+        1. Lancer Cineclub
+        2. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Résultat attendu
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Résultat observé
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs utiles
+      description: Colle uniquement les lignes nécessaires après avoir supprimé liens, jetons, chemins personnels et noms de films.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Vérification avant envoi
+      options:
+        - label: J'ai retiré les liens d'invitation, jetons, chemins personnels et contenus vidéo.
+          required: true
